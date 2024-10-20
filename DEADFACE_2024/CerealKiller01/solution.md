@@ -1,5 +1,5 @@
 
-CEREALKILLER01 25 Points
+# CEREALKILLER01 25 Points
 
 For this challenge we get a zip file containing a binary, if we run it with random input it returns: `ACCESS DENIED!!!`
 
@@ -14,7 +14,7 @@ If you try do this by changing ```if (iVar3 == 0)``` to ```if (iVar3 == 1)```, t
 However we can try to change the strcmp function:
 ![image](https://github.com/user-attachments/assets/fe16e913-b44b-44e5-8951-ae2e54440c28)
 
-If we set local4b7 = "obboreel", the if statement will be true and "obboreel" will be used for th decryption.
+If we set local4b7 = "obboreel", the if statement will be true and "obboreel" will be used for the decryption.
 
 To to do this you can patch the binary or use gdb, I used gdb.
 
