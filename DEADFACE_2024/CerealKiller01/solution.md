@@ -1,3 +1,6 @@
+
+CEREALKILLER01 25 Points
+
 For this challenge we get a zip file containing a binary, if we run it with random input it returns: `ACCESS DENIED!!!`
 
 To solve this I first opened the file in ghidra to see what was going on (I also tried renaming some of the functions):
