@@ -1,5 +1,5 @@
 
-# CEREALKILLER01 25 Points
+# CEREALKILLER01: 25 Points
 
 For this challenge we get a zip file containing a binary, if we run it with random input it returns: `ACCESS DENIED!!!`
 
