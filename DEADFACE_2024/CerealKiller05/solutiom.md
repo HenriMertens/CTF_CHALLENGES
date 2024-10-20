@@ -1,5 +1,5 @@
 
-CEREALKILLER05: 200 Points
+# CEREALKILLER05: 200 Points
 
 For this challnege we get a .jar file, we can extract the contents by using the unzip command.
 After this we find two files, a meta-inf (not interesting) and a RE08.class.
