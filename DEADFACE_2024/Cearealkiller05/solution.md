@@ -1,3 +1,5 @@
+CEREALKILLER05: 200 Points
+
 For this challnege we get a .jar file, we can extract the contents by using the unzip command.
 After this we find two files, a meta-inf (not interesting) and a RE08.class.
 We can use jd-gui to decompile this class: `jd-gui RE08.class`
@@ -113,24 +115,40 @@ We can follow the execution flow by seeing what the main function does:
 2) Tries to decrypt the url based on your string and store it as bytearray:
    ```java
    byte[] arrayOfByte = decryptURL(encryptedURL, str1);``` 
-3) Convert the array of bytes to a string (str2) and check if it start with "https"
-4) After this an image get downloaded from the decrypted url and is saved as a local file, note that downloadImage(String paramString) will always return the string ```"downloaded_image.jpg"```.
-5) This file is used in the calculateSHA256
+3) Convert the array of bytes to a string (str2) and check if it start with "https":
+   ```java
+    if (str2.startsWith("https")) ```
+   
+5) After this an image get downloaded from the decrypted url and is saved as a local file, note that downloadImage(String paramString) will always return the string ```"downloaded_image.jpg"```.
+   
+6) This file is used in the calculateSHA256
    ```java
    private static byte[] calculateSHA256(String paramString)```
-6) This is in return used by the decryptFlagWithAESGCM to decrypt the flag
+7) This is in return used by the decryptFlagWithAESGCM to decrypt the flag
     ```java
     byte[] arrayOfByte1 = calculateSHA256(str3);
     String str4 = decryptFlagWithAESGCM(arrayOfByte1, "Tj/BJ+45Z45uRCFpuFOHirQI34ZC7bmtpCtJ3OE613fIxqrsZwIoLNSBXSjtPONFqZF3gC+4glh1Gyi2RBKZcuItH8s=", "qHttv1t5TWZLDM4e");
     ```
-7) Basically if you cant download the image, you cant decrypt the flag. This means that we actually need to try and get the password to make progress.
+8) Basically if you cant download the image, you cant decrypt the flag. This means that we actually need to try and get the password to make progress.
 
 How do we do that?
-1) If we take a look at the decryptURL function, we can see thats is basically just doing bitwise xor, each character of our password will be xored with each element of the array. The result we be the decrypted url.
-2) The challenge maker gave us a hint with ```java str2.startsWith("https")```, since the url starts with https and every url is followed by "://" we can already decipher some characters from the password.
+1) If we take a look at the decryptURL function, we can see thats is basically just doing bitwise xor, each character of our password will be xored with each element of the array. The result will be the decrypted url.
+   ```java
+   private static byte[] decryptURL(byte[] paramArrayOfbyte, String paramString) {
+    byte[] arrayOfByte = new byte[paramArrayOfbyte.length];
+    for (byte b = 0; b < paramArrayOfbyte.length; b++)
+      arrayOfByte[b] = (byte)(paramArrayOfbyte[b] ^ paramString.charAt(b % paramString.length())); 
+    return arrayOfByte;
+    }
+  
+3) The challenge maker gave us a hint with ```str2.startsWith("https")```, since the url starts with https and every url is followed by "://" we can already decipher some characters from the password.
    The basic idea is here that we can hopefully guess the password based on the firts 8 characters.
-3) We  know that ```password[0] ^ encryptedURL[0] = h``` and ```password[1] ^ encryptedURL[1] = t ``` and ```password[2] ^ encryptedURL[2] = t ``` and so on. SO i made a python script that does this for us.
-4) After running teh script we get:
+4) We  know that ```password[0] ^ encryptedURL[0] = h``` and ```password[1] ^ encryptedURL[1] = t ``` and ```password[2] ^ encryptedURL[2] = t ``` and so on. So i made a python script that does this for us.
+5) After running the script we get:
+   ```Br00tBr0```
+6) I assumed the password was "Br00t" repeated over and over again, so I just copy pasted "Br00t" until I got to the length of the ancrypted url array (53).
+7) This worked and gave me the flag:
+   ```flag{Fr00t-Br00t-is-the-only-cereal-for-Prez-Trump!} ``` 
    
    
    
